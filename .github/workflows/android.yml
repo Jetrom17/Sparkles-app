@@ -21,13 +21,11 @@ jobs:
 
       - name: Notify Telegram
         if: success()
-        uses: EverythingSuckz/github-telegram-notify@main
-        continue-on-error: true
-        with:
-          bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          chat_id: -1002327390277
-          topic_id: 16
-          message: "Aplicativo sendo enviado por @sparkleside" # Mensagem personalizada
+        run: |
+          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -F chat_id="-1002327390277" \
+            -F text="Aplicativo sendo enviado por @sparkleside" \
+            -F message_thread_id="16"
           
   build_debug_apk:
     name: Build App Debug APK
@@ -92,4 +90,4 @@ jobs:
             -F chat_id="-1002327390277" \
             -F message_thread_id="16" \
             -F document=@"sparkles-app-debug.apk" \
-            -F caption="Aplicativo sendo enviado por @sparkleside"  # Mensagem de envio do APK
+            -F caption="Aplicativo sendo enviado por @sparkleside"
