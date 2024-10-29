@@ -19,7 +19,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: notify telegram
+      - name: Notify Telegram
         uses: EverythingSuckz/github-telegram-notify@main
         continue-on-error: true
         with:
@@ -88,12 +88,11 @@ jobs:
           mv app-debug.apk sparkles-app-debug.apk
           ls 
 
-      - name: Send APK to Release Channel Telegram with Topic ID
+      - name: Send APK to Release Channel Telegram
         if: success()
         continue-on-error: true
         run: |
           curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
-            -F chat_id=16"${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -F message_thread_id="16" \
+            -F chat_id="-1002327390277" \
             -F document=@"sparkles-app-debug.apk" \
             -F caption="${{ github.event.head_commit.message }} by ${{ github.actor }}"
