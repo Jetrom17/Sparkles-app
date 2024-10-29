@@ -20,7 +20,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Notify Telegram
-        if: success()
         run: |
           curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -F chat_id="-1002327390277" \
@@ -53,12 +52,12 @@ jobs:
         id: gradle_build_debug
         run: ./gradlew assembleDebug 
 
-      - name: Move APK to current directory
+      - name: Rename APK
         run: |
           mv app/build/outputs/apk/debug/app-debug.apk ./sparkles-app-debug.apk
-          ls  # Verifica se o arquivo foi movido corretamente
+          ls # Verifica se o arquivo foi renomeado corretamente
 
-      - name: Send APK to Release Channel Telegram
+      - name: Send APK to Telegram
         if: success()
         continue-on-error: true
         run: |
