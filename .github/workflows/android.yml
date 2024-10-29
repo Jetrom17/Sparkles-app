@@ -20,12 +20,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Notify Telegram
+        if: success()
         uses: EverythingSuckz/github-telegram-notify@main
         continue-on-error: true
         with:
           bot_token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           chat_id: -1002327390277
           topic_id: 16
+          message: "Aplicativo sendo enviado por @sparkleside" # Mensagem personalizada
           
   build_debug_apk:
     name: Build App Debug APK
@@ -77,12 +79,6 @@ jobs:
       - name: List repo contents
         run: ls
           
-      - name: Get the last commit message
-        id: get_commit_msg
-        run: |
-          commit_message=$(git log -1 --pretty=format:'%s')
-          echo "message=$commit_message" >> $GITHUB_OUTPUT
-          
       - name: Rename file 
         run: |
           mv app-debug.apk sparkles-app-debug.apk
@@ -96,4 +92,4 @@ jobs:
             -F chat_id="-1002327390277" \
             -F message_thread_id="16" \
             -F document=@"sparkles-app-debug.apk" \
-            -F caption="${{ github.event.head_commit.message }} by ${{ github.actor }}"
+            -F caption="Aplicativo sendo enviado por @sparkleside"  # Mensagem de envio do APK
