@@ -12,27 +12,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  init:
-    name: Init
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Notify Telegram
-        if: success()
-        run: |
-          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -F chat_id="-1002327390277" \
-            -F text="Application being sent by @sparkleside" \
-            -F message_thread_id="16"
-          
   build_debug_apk:
     name: Build App Debug APK
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -58,36 +43,32 @@ jobs:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           
-  send_debug_apk:
-    name: Send Debug APK
-    runs-on: ubuntu-latest
-    needs: build_debug_apk
-    
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          
-      - name: Download debug apk
-        uses: actions/download-artifact@v4
-        with:
-          name: app-debug
-          
       - name: List repo contents
         run: ls
-          
+
       - name: Rename file 
         run: |
           mv app-debug.apk sparkles-app-debug.apk
           ls 
 
+      - name: Notify Telegram
+        if: success()
+        run: |
+          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -F chat_id="-1002327390277" \
+            -F text="Application is being sent by @sparkleside" \
+            -F message_thread_id="16"
+          
       - name: Send APK to Release Channel Telegram
         if: success()
         continue-on-error: true
         run: |
-          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
-            -F chat_id="-1002327390277" \
-            -F message_thread_id="16" \
-            -F document=@"sparkles-app-debug.apk" \
-            -F caption="@sparkleside"
+          if [ -f sparkles-app-debug.apk ]; then
+            curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
+              -F chat_id="-1002327390277" \
+              -F message_thread_id="16" \
+              -F document=@"sparkles-app-debug.apk" \
+              -F caption="@sparkleside"
+          else
+            echo "File sparkles-app-debug.apk not found!"
+          fi
