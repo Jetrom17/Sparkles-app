@@ -58,7 +58,6 @@ jobs:
           ls ./  # Verifica se o arquivo foi renomeado corretamente
 
       - name: Send APK to Telegram
-        if: success()
         run: |
           if [ -f "./sparkles-app-debug.apk" ]; then
             curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
@@ -67,5 +66,5 @@ jobs:
               -F document=@"./sparkles-app-debug.apk" \
               -F caption="@sparkleside"
           else
-            echo "File sparkles-app-debug.apk not found!"
+            echo "File sparkles-app-debug.apk not found in $(pwd)!"
           fi
