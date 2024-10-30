@@ -80,12 +80,12 @@ jobs:
           mv app-release.apk sparkles-app-release.apk
           ls 
 
-      - name: Send APK to Release Channel Telegram with Topic ID
+      - name: Send APK to Telegram
         if: success()
         continue-on-error: true
         run: |
           curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
-            -F chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -F message_thread_id="11" \
+            -F chat_id="-1002327390277" \
+            -F message_thread_id="16" \
             -F document=@"sparkles-app-release.apk" \
             -F caption="${{ github.event.head_commit.message }} by ${{ github.actor }}"
