@@ -60,7 +60,7 @@ jobs:
       - name: Send APK to Telegram
         if: success()
         run: |
-          if [ -f ./sparkles-app-debug.apk ]; then
+          if [ -f "./sparkles-app-debug.apk" ]; then
             curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
               -F chat_id="-1002327390277" \
               -F message_thread_id="16" \
