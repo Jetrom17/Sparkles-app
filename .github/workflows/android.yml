@@ -25,7 +25,7 @@ jobs:
             -F chat_id="-1002327390277" \
             -F text="Application is being sent by @sparkleside" \
             -F message_thread_id="16"
-          
+
   build_debug_apk:
     name: Build App Debug APK
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
       - name: Move and rename APK
         run: |
           mv app/build/outputs/apk/debug/app-debug.apk ./sparkles-app-debug.apk
-          ls  # Verifica se o arquivo foi renomeado corretamente
+          ls ./  # Verifica se o arquivo foi renomeado corretamente
 
       - name: Send APK to Telegram
         if: success()
@@ -64,7 +64,7 @@ jobs:
             curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
               -F chat_id="-1002327390277" \
               -F message_thread_id="16" \
-              -F document="./sparkles-app-debug.apk" \
+              -F document=@"./sparkles-app-debug.apk" \
               -F caption="@sparkleside"
           else
             echo "File sparkles-app-debug.apk not found!"
