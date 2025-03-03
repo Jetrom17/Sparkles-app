@@ -23,7 +23,7 @@ jobs:
         with:
           path: '.'  # Diretório a ser analisado (raiz do projeto)
           format: 'HTML'  # Formato do relatório (pode ser HTML, JSON, etc.)
-          failOnCVSS: '7'  # Falha o job se encontrar vulnerabilidades com CVSS >= 1
+          failOnCVSS: '1'  # Falha o job se encontrar vulnerabilidades com CVSS >= 1
 
       # Faz upload do relatório como artefato
       - name: Upload Dependency-Check Report
