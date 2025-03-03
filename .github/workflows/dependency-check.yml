@@ -1,0 +1,33 @@
+name: Dependency Check
+
+# Quando o workflow será executado
+on:
+  push:
+    branches:
+      - main  # Executa no push para a branch principal
+  pull_request:
+    branches:
+      - main  # Executa em pull requests para a branch principal
+
+jobs:
+  dependency-check:
+    runs-on: ubuntu-latest  # Máquina virtual onde o job será executado
+    steps:
+      # Faz checkout do código do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Executa o Dependency-Check
+      - name: Run Dependency-Check
+        uses: dependency-check/Dependency-Check@main  # Ação oficial do Marketplace
+        with:
+          path: '.'  # Diretório a ser analisado (raiz do projeto)
+          format: 'HTML'  # Formato do relatório (pode ser HTML, JSON, etc.)
+          failOnCVSS: '7'  # Falha o job se encontrar vulnerabilidades com CVSS >= 1
+
+      # Faz upload do relatório como artefato
+      - name: Upload Dependency-Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: dependency-check-report.html  # Caminho do relatório gerado
